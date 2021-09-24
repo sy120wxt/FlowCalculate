@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="../css/CSS.css"/>
+        <script type="text/javascript" src="../script/reverseInit.js"></script>
+        <script type="text/javascript" src="../script/reverseCal.js"></script>
+        <script type="text/javascript" src="../script/check.js"></script>
+        <script type="text/javascript" src="../script/MDRS.js"></script>
+        <script type="text/javascript" src="../script/explain.js"></script>
+    </head>
+    <body onload="init()">
+        <p id="head" class="head">请选择要计算的扇区</p>
+        <select name="sector" id="sector" onclick="selectSector('cap','head',this.value)">
+            <option id="noselect" value="noselect">请选择扇区</option>
+            <option id="AR01" value="AR01">AR01</option>
+            <option id="AR02" value="AR02">AR02</option>
+            <option id="AR03" value="AR03">AR03</option>
+            <option id="AR04" value="AR04">AR04</option>
+            <option id="AR05" value="AR05">AR05</option>
+            <option id="AR06" value="AR06">AR06</option>
+            <option id="AR07" value="AR07">AR07</option>
+            <option id="AR02_08C" value="AR02_08C">AR02、08合扇</option>
+            <option id="AR03_12C" value="AR03_12C">AR03、12合扇</option>
+            <option id="AR07_13C" value="AR07_13C">AR07、13合扇</option>
+            <option id="AR04_14C" value="AR04_14C">AR04、14合扇</option>
+        </select>
+        <p id="cap"></p>
+        <p id="text"></p>
+        <table class="table" id="table">
+            <tr>
+                <td class="firstC">
+                    时间<br/>
+                    <input type="radio" name="time" value="60" checked>60
+                    <input type="radio" name="time" value="30">30
+                    <input type="radio" name="time" value="15">15
+                </td>
+                <td class="thin">
+                    通行能力下降比
+                    <br/>
+                    <select id="capDown">
+
+                    </select>
+                </td>
+                <td class="thin">
+                    扇区动态容量
+                </td>
+                <td class="thin">
+                    预计扇区总进扇量
+                </td>
+                <td class="thin">
+                    <textarea type="text" placeholder="输入流控方向1" id="R0C4U"></textarea>
+                    <textarea type="text" placeholder="流控小时架次" id="R0C4D" onchange="flowNum(4)"></textarea>
+                </td>
+                <td class="thin">
+                    <textarea type="text" placeholder="输入流控方向2" id="R0C5U"></textarea>
+                    <textarea type="text" placeholder="流控小时架次" id="R0C5D" onchange="flowNum(5)"></textarea>
+                </td>
+                <td class="thin">
+                    <textarea type="text" placeholder="输入流控方向3" id="R0C6U"></textarea>
+                    <textarea type="text" placeholder="流控小时架次" id="R0C6D" onchange="flowNum(6)"></textarea>
+                </td>
+
+                <td class="wide">
+                    <p id="R0C7">流控内容填写说明</p>
+                </td>
+                <td class="thin">
+                    <p id="R0C8">预计扇区小时进入架次</p>
+                </td>
+                <td class="thin">
+                    <p id="R0C9">（流量-通行能力）/流量</p>
+                </td>
+                <td><p id="R0C10">应公布通行能力</p></td>
+            </tr>
+            
+        </table>
+        <p id="explain">
+
+        </p>
+        <button onclick="insertRow('table')">增加时间段</button>
+        <button onclick="insertColumn('table')">增加流控方向</button>
+        <button onclick="calculate()">平均值计算法</button>
+        <button onclick="Button2()">消除MDRS计算</button>
+    </body>
+</html>

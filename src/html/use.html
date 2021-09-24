@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="../css/CSS.css"/>
+        <title></title>
+        <script type="text/javascript" src="../script/init.js"></script>
+        <script type="text/javascript" src="../script/calcu.js"></script>
+        <script type="text/javascript" src="../script/MDRS.js"></script>
+        <script type="text/javascript" src="../script/text.js"></script>
+        <script type="text/javascript" src="../script/check.js"></script>
+        <script type="text/javascript" src="../script/explain.js"></script>
+    </head>
+    <body onload="init(),test()">
+        <p id="head" class="head">请选择要计算的扇区</p>
+        <select name="sector" id="sector" onclick="selectSector('cap','head',this.value)">
+            <option id="noselect" value="noselect">请选择扇区</option>
+            <option id="AR01" value="AR01">AR01</option>
+            <option id="AR02" value="AR02">AR02</option>
+            <option id="AR03" value="AR03">AR03</option>
+            <option id="AR04" value="AR04">AR04</option>
+            <option id="AR05" value="AR05">AR05</option>
+            <option id="AR06" value="AR06">AR06</option>
+            <option id="AR07" value="AR07">AR07</option>
+            <option id="AR02_08C" value="AR02_08C">AR02、08合扇</option>
+            <option id="AR03_12C" value="AR03_12C">AR03、12合扇</option>
+            <option id="AR07_13C" value="AR07_13C">AR07、13合扇</option>
+            <option id="AR04_14C" value="AR04_14C">AR04、14合扇</option>
+        </select>
+        <p id="cap"></p>
+        <p id="text"></p>
+        <table class="table" id="table">
+            <tr>
+                <td class="firstC">
+                    时间<br/>
+                    <input type="radio" name="time" value="60" checked>60
+                    <input type="radio" name="time" value="30">30
+                    <input type="radio" name="time" value="15">15
+                </td>
+                <td class="thin">
+                    通行能力下降比(%)
+                    <br/>
+                    <select id="capDown">
+
+                    </select>
+                </td>
+                <td class="thin">
+                    动态容量
+                </td>
+                
+                <td class="thin">
+                    预计扇区总进扇量
+                </td>
+                <td class="thin">
+                    <textarea type="text" placeholder="输入流控方向1" id="R0C4"></textarea>
+                </td>
+                <td class="thin">
+                    <textarea type="text" placeholder="输入流控方向2" id="R0C5"></textarea>
+                </td>
+                <td class="thin">
+                    <textarea type="text" placeholder="输入流控方向3" id="R0C6"></textarea>
+                </td>
+
+                <td class="wide">
+                    <p id="R0C7">预计扇区小时架次（进扇量）</p>
+                </td>
+                <td class="wide">
+                    <p id="R0C8">（流量-通行能力）/流量</p>
+                </td>
+                <td class="wide">
+                    <p id="R0C9">应声明的动态容量与下降百分比</p>
+                </td>
+            </tr>
+            
+        </table>
+        <button onclick="insertRow('table')">点击新增时间行</button>
+        <button onclick="insertColumn('table')">点击新增流控方向</button>
+        <button onclick="test()">时间</button>
+        <button onclick="calculate()">点击计算流控策略</button>
+        <button onclick="Button2()">点击获取不启动MDRS的策略</button>
+        <p id="explain">
+
+        </p>
+    </body>
+</html>

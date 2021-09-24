@@ -1,0 +1,62 @@
+td{
+    border: 1px solid black;
+    size: 5;
+}
+
+.clear{
+    background-color: white;
+    
+}
+.red{
+    background-color: rgb(230, 81, 81);
+}
+
+.orange{
+    background-color: orange;
+}
+
+.yellow{
+    background-color: yellow;
+}
+
+input{
+    font-size: 20px;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    size:100%;
+    word-break: initial;
+}
+
+select{
+    font-size: 20px;
+}
+option{
+    font-size: 20px;
+}
+
+.thin{
+    size: 5;
+    width: 5px;
+}
+
+.wide{
+    size: 12;
+    width: 100px;
+}
+
+textarea{
+    font-size: 20px;
+    width: 90px;
+}
+
+.head{
+    font-size: 30px;
+    font-weight: bolder;
+    text-align: center;
+}
+
+.superWide{
+    size: initial;
+    width: max-content;
+}
