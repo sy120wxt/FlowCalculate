@@ -18,6 +18,9 @@ var AR05T = 30;
 var AR06T = 12;
 var AR07T = 25;
 
+//偏移值，用以整合内容相近的流控
+var offSet = 5;
+
     //动态容量
     var C = {};
     //各受限方向总进入量D，本小时受流控之前
@@ -56,6 +59,10 @@ function getD(row){
     return D[row.toString()];
 }
 
+function setD(row,value){
+    D[row.toString()] = value;
+}
+
 
 //获取表格中各小时各方向流控前的进入量
 function getDirections(row,direction){
@@ -63,7 +70,7 @@ function getDirections(row,direction){
         let value = getValue("R"+row + "C" + (4+j));
         //key为row*direction 到 row * direction-1 时，表示第row行的direction个数
         let key = direction*row + j;
-        console.log(key);
+        //console.log(key);
         d[key.toString()] = value;
     }
 }
@@ -143,7 +150,7 @@ function getInfo(){
         //获取总进入量
         getIn(i);
         //获取各方向进入量
-        console.log(direction);
+        //console.log(direction);
         getDirections(i,direction);
         //设置第一小时，上一小时减少量为0
         R[0] = 0;
@@ -197,8 +204,8 @@ function calFirst(){
         let Drow = getD(i) + getR(i-1);
         //Crow第row行的动态容量
         let Crow = getC(i);
-        console.log("Drow:"+Drow);
-        console.log("Crow:"+Crow);
+        //console.log("Drow:"+Drow);
+        //console.log("Crow:"+Crow);
         if(Drow <= Crow){
             chao[i] = false;
             setR(i,0);
@@ -220,8 +227,8 @@ function calFirst(){
             //计算第row行direction进入量总数 = direction内各列数据+上一小时各自减少量
             let directionAdd = 0;
             for(let j = 0; j <direction ; j++){
-                console.log("getd:"+getd(i,j,direction));
-                console.log("getr:"+getr(i-1,j,direction));
+                //console.log("getd:"+getd(i,j,direction));
+                //console.log("getr:"+getr(i-1,j,direction));
                 directionAdd = directionAdd + getd(i,j,direction) + getr(i-1,j,direction);
             }
             
@@ -233,7 +240,7 @@ function calFirst(){
                 //第row行第j列应减少架次
                 let rrow = 0;
                 //先判断分母是否为0
-                console.log("directionAdd:"+directionAdd);
+                //console.log("directionAdd:"+directionAdd);
                 if(directionAdd == 0){
                     setr(i,j,direction,0);
                     setrBeforeAve(i,j,direction,0);
@@ -245,13 +252,13 @@ function calFirst(){
                 }
                 //第row行第j列流控后进入架次
                 let drow = getd(i,j,direction)+getr(i-1,j,direction) - rrow;
-                console.log("i="+i+"drow"+drow);
+                //console.log("i="+i+"drow"+drow);
                 setdAfter(i,j,direction,drow);
                 setdBeforeAve(i,j,direction,drow);
-                console.log("i="+i+"rrow"+rrow);
+                //console.log("i="+i+"rrow"+rrow);
                 RrowActraul = RrowActraul + rrow;
             }
-            console.log("i="+i+"RrowActraul:"+RrowActraul);
+            //console.log("i="+i+"RrowActraul:"+RrowActraul);
             setR(i,RrowActraul);
             setRBeforeAve(i,RrowActraul);
         }
@@ -330,6 +337,78 @@ function calSecond(){
     }
     console.log("dAfter:");
     console.log(dAfter);
+}
+
+function calOffset(){
+    //近似值开始的位置
+    let positionA = 1;
+
+    //近似值的长度
+    let len = 1;
+    //近似值
+    let num = 0;
+    let a = 0;
+    let b = 0;
+    //遍历数组，先遍历列，后遍历行，看某方向，每个时间段与上一个时间段比较，相差值有多少
+    for(let j = 0; j < direction;j++){
+        num = getdAfter(1,j,direction);
+        for(let i = 2; i < row ; i++){
+            //设定第一行上一时段的进入量为第一段进入量，设置上一小时a和这一小时b的值
+            
+            a = getdAfter(i - 1,j,direction);
+            b = getdAfter(i,j,direction);
+            console.log("b:"+b);
+            //如果这一小时进入量b与上一小时进入量a相差小于等于offset的值，平均值长度+1，num += b;
+            //并且b不能等于0，b如果等于0就强制计算平均值
+            if(Math.abs(b - a) <= offSet && b !=0){
+                len += 1;
+                num = num + b;
+            }
+            //如果b与a相差大于offset的值，计算平均值，长度清零，总值清零，平均值清零，a的位置更新
+            else{
+                let ave = Math.round(num/len);
+                console.log("num:"+num);
+                console.log("len:"+len);
+                
+                for(let k = 0; k < len ; k++){
+                    setdAfter((positionA+k),j,direction,ave);
+                    //重写实际减少量=本小时流控前进入量+上小时延误量-本小时实际进入量
+                    let rrr = getd((positionA+k),j,direction)+getr((positionA+k-1),j,direction)-ave;
+                    if(rrr<0){
+                        rrr = 0;
+                    }
+                    setr((positionA+k),j,direction,rrr);
+                    console.log("position:"+(positionA+k));
+                }
+                num = b;
+                ave = 0;
+                len = 1;
+                positionA = i;
+            }
+            //如果i为最后一行,长度先自加1，num加最后一行的值，计算平均值，之后长度清零，总值平均值清零，a位置更新
+            if( i == row -1){
+                len += 1;
+                num = num+b;
+                let ave = Math.round(num/len);
+                console.log("num:"+num);
+                console.log("len:"+len);
+                for(let k = 0; k < len ; k++){
+                    setdAfter((positionA+k),j,direction,ave);
+                    //重写实际减少量=本小时流控前进入量+上小时延误量-本小时实际进入量
+                    let rrr = getd((positionA+k),j,direction)+getr((positionA+k-1),j,direction)-ave;
+                    if(rrr<0){
+                        rrr = 0;
+                    }
+                    setr((positionA+k),j,direction,rrr);
+                    console.log("position:"+(positionA+k));
+                }
+                num = 0;
+                ave = 0;
+                len = 1;
+                positionA = 1;
+            }
+        }
+    }
 }
 
 
@@ -423,7 +502,8 @@ function calculate(){
     //精确正向计算
     calFirst();
     //取平均值计算
-    calSecond();
+    //calSecond();
+    calOffset();
     //检验流控后进入量及MDRS触发
     check();
     //对计算过程进行说明
@@ -438,6 +518,7 @@ function Button2(){
         disMDRS(i);
     }
     calFirst();
+    calOffset();
     //calSecond();
     //检验流控后进入量及MDRS触发
     check();

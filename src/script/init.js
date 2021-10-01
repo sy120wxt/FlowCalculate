@@ -38,7 +38,7 @@ var textArea = 7;//设定流控内容为第7列
 
 //定义select扇区方法
 function selectSector(id_sector,id_head,value){
-    console.log("运行了");
+    //console.log("运行了");
     switch (value) {
         case "noselect":
             document.getElementById(id_sector).innerHTML ="";
@@ -169,7 +169,7 @@ function createTable(tableid){
             //在第二列加入功能，事件，根据输入值，修改第三列的动态容量
             if(j == 1){
                 input.oninput = function(){
-                    console.log("改变了"+this.value);
+                    //console.log("改变了"+this.value);
                     document.getElementById("R"+ i + "C2").value = Math.round(staticCap*(100-this.value)/100);
                 }
             }
@@ -177,7 +177,7 @@ function createTable(tableid){
             //在第三列加入功能，事件，输入值，修改第二列的通行能力下降值
             if(j == 2){
                 input.oninput = function(){
-                    console.log("改变了");
+                    //console.log("改变了");
                     document.getElementById("R"+ i + "C1").value = Math.round((1-this.value/staticCap)*10)*10;
                 }
             }
@@ -248,7 +248,7 @@ function insertColumn(tableid){
 //创建时间选择列表
 function createTime(){
     let x = document.getElementById("TR0C0");
-    console.log(x.id);
+    //console.log(x.id);
     let hour = document.createElement("select");
     hour.addEventListener("click",function(){changeTime(hour.id,minute.id)});
     hour.id = "hour";
@@ -292,11 +292,11 @@ function changeTime(hourId,minuteId){
     let hour = Number(document.getElementById(hourId).value);
     let minute = Number(document.getElementById(minuteId).value);
     let step = getStep();
-    console.log(step);
+    //console.log(step);
 
     for(i=1; i<row; i++){
         let cell = document.getElementById("R"+i+"C0");
-        console.log(cell.id);
+        //console.log(cell.id);
         if(step == 60){
             cell.innerHTML = (hour + i -1) + ":00-" + (hour + i)+":00" ;
             //console.log(cell.value);
