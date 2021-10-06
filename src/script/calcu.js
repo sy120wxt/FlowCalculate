@@ -31,6 +31,8 @@ var offSet = 5;
     var r = {};
     //各方向预测进入量，本小时受流控之前
     var d = {};
+    //各方向进入量，用以判断calOffset是否发流控了
+    var dOffset = {};
     //各数据清零方法
     function obj(){}
 
@@ -91,6 +93,17 @@ function setr(row,j,direction,value){
     let key = row*direction + j;
     r[key] = value;
 }
+
+//获取各小时各方向的减少量
+// function getdOffset(row,j,direction){
+//     let key = row*direction + j;
+//     return dOffset[key.toString()];
+// }
+// //设置各小时各方向的减少量
+// function setdOffset(row,j,direction,value){
+//     let key = row*direction + j;
+//     dOffset[key] = value;
+// }
 
 
 //设置各小时总减少量
@@ -339,76 +352,152 @@ function calSecond(){
     console.log(dAfter);
 }
 
-function calOffset(){
-    //近似值开始的位置
-    let positionA = 1;
+//设置各方向各小时进入量，用于calOffset中，以前后浮动值为依据
+//sum是和，length是个数，positionA是起始的行，i是目前的行，j是当前的列
+function setdValue(sum,length,positionA,i,j){
+    let x = Math.round(sum/length);
+    for(let k = positionA; k < i; k++){
+        setdAfter(k,j,direction,x);
+    }
+}
 
-    //近似值的长度
+function calOffset(){
+    console.log("calOffset执行");
+    let positionA = 1;
+    let sum = 0;
     let len = 1;
-    //近似值
-    let num = 0;
-    let a = 0;
-    let b = 0;
-    //遍历数组，先遍历列，后遍历行，看某方向，每个时间段与上一个时间段比较，相差值有多少
-    for(let j = 0; j < direction;j++){
-        num = getdAfter(1,j,direction);
-        for(let i = 2; i < row ; i++){
-            //设定第一行上一时段的进入量为第一段进入量，设置上一小时a和这一小时b的值
-            
-            a = getdAfter(i - 1,j,direction);
-            b = getdAfter(i,j,direction);
-            console.log("b:"+b);
-            //如果这一小时进入量b与上一小时进入量a相差小于等于offset的值，平均值长度+1，num += b;
-            //并且b不能等于0，b如果等于0就强制计算平均值
-            if(Math.abs(b - a) <= offSet && b !=0){
-                len += 1;
-                num = num + b;
+
+    for(let j = 0; j< direction;j++){
+        for(let i = 1; i < row;i++){
+            //先判断该行是否发流控，以chao的值为依据
+            //没发流控
+            if(getChao(i) == false){
+                //判断上一小时有没有发流控，用sum判断
+                //之前也没发流控
+                if(sum == 0){
+                    positionA = i;
+                }
+                //之前发流控了
+                else{
+                    setdValue(sum,len,positionA,i,j);
+                    positionA = i;
+                    sum = 0;
+                }
             }
-            //如果b与a相差大于offset的值，计算平均值，长度清零，总值清零，平均值清零，a的位置更新
+            //如果发流控了
             else{
-                let ave = Math.round(num/len);
-                console.log("num:"+num);
-                console.log("len:"+len);
-                
-                for(let k = 0; k < len ; k++){
-                    setdAfter((positionA+k),j,direction,ave);
-                    //重写实际减少量=本小时流控前进入量+上小时延误量-本小时实际进入量
-                    let rrr = getd((positionA+k),j,direction)+getr((positionA+k-1),j,direction)-ave;
-                    if(rrr<0){
-                        rrr = 0;
-                    }
-                    setr((positionA+k),j,direction,rrr);
-                    console.log("position:"+(positionA+k));
+                //判断上一小时有没有发流控，用sum判断
+                //没发
+                if(sum == 0){
+                    positionA = i;
+                    sum = sum + getdAfter(i,j,direction);
+                    len = 1;
                 }
-                num = b;
-                ave = 0;
-                len = 1;
-                positionA = i;
-            }
-            //如果i为最后一行,长度先自加1，num加最后一行的值，计算平均值，之后长度清零，总值平均值清零，a位置更新
-            if( i == row -1){
-                len += 1;
-                num = num+b;
-                let ave = Math.round(num/len);
-                console.log("num:"+num);
-                console.log("len:"+len);
-                for(let k = 0; k < len ; k++){
-                    setdAfter((positionA+k),j,direction,ave);
-                    //重写实际减少量=本小时流控前进入量+上小时延误量-本小时实际进入量
-                    let rrr = getd((positionA+k),j,direction)+getr((positionA+k-1),j,direction)-ave;
-                    if(rrr<0){
-                        rrr = 0;
+                //上一小时发了
+                else{
+                    //判断这小时流控与上小时流控的差是否大于offset值，如果大于表示不近，计算之前的平均值
+                    console.log("dAfter(i):"+getdAfter(i,j,direction));
+                    console.log("dAfter(i-1):"+getdAfter(i-1,j,direction));
+                    console.log("ABS:"+Math.abs(getdAfter(i,j,direction) - getdAfter(i-1,j,direction)));
+                    if(Math.abs(getdAfter(i,j,direction) - getdAfter(i-1,j,direction)) >= offSet){
+                        setdValue(sum,len,positionA,i,j);
+                        positionA = i;
+                        sum = getdAfter(i,j,direction);
                     }
-                    setr((positionA+k),j,direction,rrr);
-                    console.log("position:"+(positionA+k));
+                    //如果不大于，则表示可以取平均值
+                    else{
+                        sum = sum + getdAfter(i,j,direction);
+                        len = len + 1;
+                        //如果已经到最后一行了，应取整个sum的平均值，然后赋值到PositionA到i
+                        if( i == row -1){
+                            setdValue(sum,len,positionA,i+1,j);
+                        }
+                    }
                 }
-                num = 0;
-                ave = 0;
-                len = 1;
-                positionA = 1;
+
+                //只要最后一行发流控了，就执行本行代码
+                if(i == row -1){
+                    positionA = 1;
+                    sum = 0;
+                    len = 1;
+                }
             }
         }
+        
+
     }
+    
+    // //近似值开始的位置
+    // let positionA = 1;
+
+    // //近似值的长度
+    // let len = 1;
+    // //近似值
+    // let num = 0;
+    // let a = 0;
+    // let b = 0;
+    // //遍历数组，先遍历列，后遍历行，看某方向，每个时间段与上一个时间段比较，相差值有多少
+    // for(let j = 0; j < direction;j++){
+    //     num = getdAfter(1,j,direction);
+    //     //得先判断该小时是否发流控，
+    //     for(let i = 2; i < row ; i++){
+    //         //设定第一行上一时段的进入量为第一段进入量，设置上一小时a和这一小时b的值
+            
+    //         a = getdAfter(i - 1,j,direction);
+    //         b = getdAfter(i,j,direction);
+
+    //         console.log("b:"+b);
+    //         //如果这一小时进入量b与上一小时进入量a相差小于等于offset的值，平均值长度+1，num += b;
+    //         //并且b不能等于0，b如果等于0就强制计算平均值
+    //         if(Math.abs(b - a) <= offSet && b !=0 && a!=0){
+    //             len += 1;
+    //             num = num + b;
+    //         }
+    //         //如果b与a相差大于offset的值，计算平均值，长度清零，总值清零，平均值清零，a的位置更新
+    //         else{
+    //             let ave = Math.round(num/len);
+    //             console.log("num:"+num);
+    //             console.log("len:"+len);
+                
+    //             for(let k = 0; k < len ; k++){
+    //                 setdAfter((positionA+k),j,direction,ave);
+    //                 //重写实际减少量=本小时流控前进入量+上小时延误量-本小时实际进入量
+    //                 let rrr = getd((positionA+k),j,direction)+getr((positionA+k-1),j,direction)-ave;
+    //                 if(rrr<0){
+    //                     rrr = 0;
+    //                 }
+    //                 setr((positionA+k),j,direction,rrr);
+    //                 console.log("position:"+(positionA+k));
+    //             }
+    //             num = b;
+    //             ave = 0;
+    //             len = 1;
+    //             positionA = i;
+    //         }
+    //         //如果i为最后一行,长度先自加1，num加最后一行的值，计算平均值，之后长度清零，总值平均值清零，a位置更新
+    //         if( i == row -1){
+    //             len += 1;
+    //             num = num+b;
+    //             let ave = Math.round(num/len);
+    //             console.log("num:"+num);
+    //             console.log("len:"+len);
+    //             for(let k = 0; k < len ; k++){
+    //                 setdAfter((positionA+k),j,direction,ave);
+    //                 //重写实际减少量=本小时流控前进入量+上小时延误量-本小时实际进入量
+    //                 let rrr = getd((positionA+k),j,direction)+getr((positionA+k-1),j,direction)-ave;
+    //                 if(rrr<0){
+    //                     rrr = 0;
+    //                 }
+    //                 setr((positionA+k),j,direction,rrr);
+    //                 console.log("position:"+(positionA+k));
+    //             }
+    //             num = 0;
+    //             ave = 0;
+    //             len = 1;
+    //             positionA = 1;
+    //         }
+    //     }
+    // }
 }
 
 

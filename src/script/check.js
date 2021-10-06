@@ -45,6 +45,9 @@ function flowAfter(row){
         RAfter = RAfter + getr(row,j,direction);
     }
     comeins = comeins + getR(row-1) - RAfter;
+    console.log("check--R(row-1):"+"ROW:"+row+","+getR(row-1));
+    console.log("check--RAfter:"+"ROW:"+row+","+RAfter);
+    console.log("check--comein:"+"ROW:"+row+","+comeins);
     setR(row,RAfter);
     document.getElementById("R"+row+"C"+(4+direction)).innerHTML = comeins;
 
@@ -65,9 +68,14 @@ function MDRS(row){
     let mdrs = 0;
     if(flow > getC(row)){
         mdrs = Math.round((flow - getC(row))/flow*1000);
+        console.log("check--flow:"+flow);
+        console.log("check--getC:"+getC(row));
     }
     if(getD(row) != 0){
         document.getElementById("R"+row+"C"+(5+direction)).innerHTML = mdrs/10 + "%";
+    }
+    else{
+        document.getElementById("R"+row+"C"+(5+direction)).innerHTML = "";
     }
     
     
