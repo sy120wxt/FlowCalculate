@@ -355,11 +355,22 @@ function calSecond(){
 //设置各方向各小时进入量，用于calOffset中，以前后浮动值为依据
 //sum是和，length是个数，positionA是起始的行，i是目前的行，j是当前的列
 function setdValue(sum,length,positionA,i,j){
+    //x表示本小时平均后各方向小时进入量
     let x = Math.round(sum/length);
+    //y表示按x进入后，本小时减少量
     for(let k = positionA; k < i; k++){
         setdAfter(k,j,direction,x);
+        let y = getd(k,j,direction)+getr(k-1,j,direction)-x;
+        if(y>0){
+            setr(k,j,direction,y);
+        }
+        else{
+            setr(k,j,direction,0);
+        }
     }
 }
+
+
 
 function calOffset(){
     console.log("calOffset执行");

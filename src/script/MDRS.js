@@ -29,17 +29,23 @@ function disMDRS(row){
     //本小时总进入量
     let F = getD(row) + Rlast;
     console.log("MDRS--F"+F);
-    if(F == 0){
+
+    //判断本小时是否超量，没超量就结束本行
+    if(F <= getC(row)){
         return;
     }
     //本小时MDRS值
     let MD = Math.round((F - getC(row))/F*1000)/1000;
     console.log("MDRS--MD:"+MD);
     if(MD < 0.25){
+        setR(row,F-getC(row));
         return;
     }
     //如果MDRS值大于25%
     if(MD >= 0.25){
+        //先判断流量的77%-通行能力 除以2，是否小于等于compare，目的是与上一小时平分应增加的架次数，但如果大于compare，上一小时最多只能多进4个
+        //设置4个的门槛是为了防止上一小时进入量过多，但可以考虑浮动该数值
+
         //先判断上一小时总减少量是多少，然后这一小时如果不触发MDRS的值，减少量应为多少
         //如果本小时减少量多，则让上一小时多进adjust个
         let minus = F - getC(row) - Rlast;
