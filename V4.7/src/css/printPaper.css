@@ -1,0 +1,44 @@
+td{
+    border: 1px solid black;
+    padding: 3px;
+}
+
+p{
+    margin: 3px;
+}
+
+table{
+    border-collapse: collapse;
+}
+
+.inner{
+    margin: 0px;
+    border-style: none;
+}
+
+.head{
+    width: 756px;
+    font-size: 30px;
+    font-family:黑体;
+    text-align: center;
+    padding: 10px;
+}
+
+.a4-endwise{
+    width: 756px;
+    /*height: 1086px;*/
+    
+    overflow: hidden;
+    padding: 0;
+    word-break:break-all;
+    font-size: 20px;
+    font-family: 仿宋;
+  }
+.a4-broadwise{
+    width: 1569px;
+    height: 1073px;
+
+    overflow: hidden;
+    padding: 0;
+    word-break:break-all;
+}

@@ -1,0 +1,95 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+
+
+    <link rel="stylesheet" type="text/css" href="../css/printPaper.css"/>
+    <script type="text/javascript" src="../script/init.js"></script>
+    <script type="text/javascript" src="../script/calcu.js"></script>
+    <script type="text/javascript" src="../script/printPaper.js"></script>
+
+        <style>
+            
+            .print{
+              position: fixed;
+              top: 1%;
+              right: 10%;
+            }
+          </style>
+
+    </head>
+    <body onload="printTable(row,direction)">
+        <!--标题栏-->
+        <p class="head">
+            沈阳区域管制中心预战术分析表
+        </p>
+        <table id="table" class="a4-endwise">
+            <tr>
+                <td style="width: 20%;"><p>日期</p></td>
+                <td id="time" style="width: 30%;"></td>
+                
+                <td style="width: 20%;"><p>受影响扇区</p></td>
+                <td id="sector" style="width: 30%;"></td>
+            </tr>
+            <tr>
+                <td ><p>预计开始时间</p></td>
+                <td id="starttime" ></td>
+                <td ><p>预计结束时间</p></td>
+                <td id="endtime"></td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <p>运行情况简述:</p>
+                    <p id="describe" style="height: 40px;">
+                       
+                    </p>
+                </td>
+            </tr>
+
+            <tr>
+                <td >
+                    <p>预判动态通行能力值</p>
+                    
+                </td>
+                <td >
+                    <p id="cap">
+                        
+                    </p>
+                </td>
+                <td >
+                    <p>会商结果</p>
+                    
+                </td>
+                <td >
+                    <p id="coordinate">
+                       
+                    </p>
+                </td>
+                
+            </tr>
+
+            <tr>
+                <td colspan="4">
+                    <p>制定措施内容:</p>
+                    <p id="content">
+                        ""
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <p style="text-align: center;">容流平衡分析</p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <table id="flowAndCap" class="inner" style="width: 100%;height: 40px;">
+                    </table>
+                </td>
+                
+            </tr>
+        </table>
+
+
+    </body>
+</html>
