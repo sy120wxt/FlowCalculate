@@ -35,6 +35,13 @@ var offSet = 5;
     //各方向进入量，用以判断calOffset是否发流控了
     var dOffset = {};
 
+    //小时不受限架次，用来填表用
+    var unRes = {};
+
+    //流控后每小时真实的进入量，用来判断二次MDRS
+    var realComein = {};
+
+
     var M = {};
     //各数据清零方法
     function obj(){}
@@ -71,6 +78,23 @@ function setD(row,value){
     D[row.toString()] = value;
 }
 
+//获取unR的值
+function getunRes(row){
+    return unRes[row.toString()];
+}
+
+function setunRes(row,value){
+    unRes[row.toString()] = value;
+}
+
+//获取realComein的值
+function getrealComein(row){
+    return realComein[row.toString()];
+}
+
+function setrealComein(row,value){
+    realComein[row.toString()] = value;
+}
 
 //获取表格中各小时各方向流控前的进入量
 function getDirections(row,direction){
@@ -90,6 +114,10 @@ function getDirections(row,direction){
         alert("第"+row+"行数据填写错误:\n各方向小时流量的和大于了本小时预计扇区的总量");
         correct = false;
         return;
+    }
+    //否则记录小时不受限架次
+    else{
+        setunRes(row,getD(row)-sum);
     }
 }
 //获取d中各小时各方向进入量
@@ -394,6 +422,7 @@ function setdValue(sum,length,positionA,i,j){
 
 
 function calOffset(){
+    //进入量取偶放在calOffset方法中
     console.log("calOffset执行");
     let positionA = 1;
     let sum = 0;
@@ -535,6 +564,30 @@ function calOffset(){
     // }
 }
 
+//取消平均值算法，该方法用于在offset时，依然触发MDRS的情形使用
+function cancelOffset(){
+    console.log("调用了cancelOffset");
+    //因为在offset方法中，只改变了2项，一个是dAfter,一个是r，所以只要把这两个改回来即可
+    for(let i = 1;i<row;i++){
+        for(let j = 0; j < direction ; j++){
+            let x = getdBeforeAve(i,j,direction);
+            //进入量取偶
+            if(x%2 != 0){
+                x= x+1;
+            }
+            setdAfter(i,j,direction,x);
+            //x取偶后小时减少量
+            let r = getd(i,j,direction) + getr(i-1,j,direction) - x;
+            if(r > 0){
+                setr(i,j,direction,r);
+            }
+            else{
+                setr(i,j,direction,0);
+            }
+        }
+    }
+}
+
 
 
 //计算过程解读
@@ -658,10 +711,12 @@ function Button2(){
     disMDRS();
     calFirst();
     calOffset();
+
     //calSecond();
     //检验流控后进入量及MDRS触发
     check();
     //对计算过程进行说明
+    secondMd();
     explain();
     setText();
 }

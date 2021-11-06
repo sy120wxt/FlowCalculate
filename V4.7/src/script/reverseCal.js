@@ -244,6 +244,7 @@ function reverseButton2(){
     //calSecond();
     //检验流控后进入量及MDRS触发
     check();
+    secondMd();
     //对计算过程进行说明
     explain();
     setText();

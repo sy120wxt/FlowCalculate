@@ -156,6 +156,23 @@ function disMDRS(){
     }
 }
 
+//解决问题：上一方法解决了各小时通行能力设定的问题，但当各方向进入量取了近似值后，可能会导致
+//MDRS为77的小时的上一小时总进入量减少，延误量增加，导致MDRS77小时的流量增加，会使MDRS值超过23，
+//解决方法：二次检验是否有依然超过MDRS值的小时，如果有，读取其上一小时通行能力和流控后进入量，判断是否由上一小时
+//流控后进入量减少引起，如果是，
+
+function secondMd(){
+    console.log("启动二次检查MDRS");
+    for(let i = 1;i<row;i++){
+        if(getM(i) >= 0.25){
+            //如果有小时MDRS大于25%，调用cancelOffset，之后跳出本方法
+            cancelOffset();
+            break;
+        }
+    }
+    check();
+}
+
 //方法开始
 // function disMDRS(row){
 //     let MDRS = getM(row);

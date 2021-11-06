@@ -7,6 +7,21 @@ td{
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.mainTd{
+    width: 100%;
+    border: none;
+}
+
+.mainDiv{
+    margin-left: 20%;
+    margin-right: 20%;
+}
+
+.analys{
+    margin: auto;
+    width: 100%;
+}
+
 .clear{
     background-color: white;
     
@@ -36,6 +51,8 @@ input{
 
 select{
     font-size: 20px;
+    text-align: center;
+    align-self:flex-start;
 }
 option{
     font-size: 20px;
@@ -60,6 +77,7 @@ textarea{
     font-size: 30px;
     font-weight: bolder;
     text-align: center;
+    width: 100%;
 }
 
 .superWide{

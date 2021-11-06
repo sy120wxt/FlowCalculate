@@ -82,43 +82,43 @@ function selectSector(id_sector,id_head,value){
             //合扇状态
         case "AR02_08C":
             document.getElementById(id_sector).innerHTML = "静态容量："+AR02_08C;
-            document.getElementById(id_head).innerHTML = "AR02_08C";
+            document.getElementById(id_head).innerHTML = "AR02+08合扇";
             staticCap = AR02_08C;
             break;
         case "AR03_12C":
             document.getElementById(id_sector).innerHTML = "静态容量："+AR03_12C;
-            document.getElementById(id_head).innerHTML = "AR03_12C";
+            document.getElementById(id_head).innerHTML = "AR03+12合扇";
             staticCap = AR03_12C;
             break;
         case "AR07_13C":
             document.getElementById(id_sector).innerHTML = "静态容量："+AR07_13C;
-            document.getElementById(id_head).innerHTML = "AR07_13C";
+            document.getElementById(id_head).innerHTML = "AR07+13合扇";
             staticCap = AR07_13C;
             break;
         case "AR04_14C":
             document.getElementById(id_sector).innerHTML = "静态容量："+AR04_14C;
-            document.getElementById(id_head).innerHTML = "AR04_14C";
+            document.getElementById(id_head).innerHTML = "AR04+14合扇";
             staticCap = AR04_14C;
             break;
             //以下是高低扇都开放时，高低扇在一起进行计算
         case "AR02L08H":
             document.getElementById(id_sector).innerHTML = "静态容量："+AR02L08H;
-            document.getElementById(id_head).innerHTML = "AR02L08H";
+            document.getElementById(id_head).innerHTML = "AR02、08同时运行";
             staticCap = AR02L08H;
             break;
         case "AR03L12H":
             document.getElementById(id_sector).innerHTML = "静态容量："+AR03L12H;
-            document.getElementById(id_head).innerHTML = "AR03L12H";
+            document.getElementById(id_head).innerHTML = "AR03、12同时运行";
             staticCap = AR03L12H;
             break;
         case "AR07L13H":
             document.getElementById(id_sector).innerHTML = "静态容量："+AR07L13H;
-            document.getElementById(id_head).innerHTML = "AR07L13H";
+            document.getElementById(id_head).innerHTML = "AR07、13同时运行";
             staticCap = AR07L13H;
             break;
         case "AR04L14H":
             document.getElementById(id_sector).innerHTML = "静态容量："+AR04L14H;
-            document.getElementById(id_head).innerHTML = "AR04L14H";
+            document.getElementById(id_head).innerHTML = "AR04、14同时运行";
             staticCap = AR04L14H;
             break;
         //以下是单独计算高扇时
@@ -413,17 +413,12 @@ function init(){
     //setCapClass();
 }
 
-var pArr = new Array();
-var ppp = 0;
+
 //生成报表方法
-function report(row,direction){
-    console.log(D[1]);
-    ppp = D[1]+ppp;
-    console.log(ppp);
-    pArr[0] = ppp;
-    console.log(pArr[0]);
-    window.open('../html/printPaper.html');
-    //printTable(row,direction);
+function report(){
+    document.getElementById("analys").style.display = "none";
+    printTable();
+    document.getElementById("a4-printArea").style.display = "block";
 }
 
 

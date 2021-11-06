@@ -45,8 +45,10 @@ function flowAfter(row){
         RAfter = RAfter + getr(row,j,direction);
     }
     comeins = comeins + getR(row-1) - RAfter;
+    setrealComein(row,comeins);
     //如果该行各方向进入量和为0，表示没有飞机，不需要显示结束本方法
     if(comeins == 0){
+        setR(row,0);
         return;
     }
     console.log("check--R(row-1):"+"ROW:"+row+","+getR(row-1));

@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <link rel="stylesheet" type="text/css" href="../css/CSS.css"/>
+        <link rel="stylesheet" type="text/css" href="../css/printPaper.css"/>
         <title></title>
         <script type="text/javascript" src="../script/init.js"></script>
         <script type="text/javascript" src="../script/printPaper.js"></script>
@@ -13,75 +14,176 @@
         <script type="text/javascript" src="../script/explain.js"></script>
     </head>
     <body onload="init(),test()">
-        <p id="head" class="head">请选择要计算的扇区</p>
-        <select name="sector" id="sector" onclick="selectSector('cap','head',this.value)">
-            <option id="noselect" value="noselect">请选择扇区</option>
-            <option id="AR01" value="AR01">AR01</option>
-            <option id="AR02" value="AR02">AR02</option>
-            <option id="AR03" value="AR03">AR03</option>
-            <option id="AR04" value="AR04">AR04</option>
-            <option id="AR05" value="AR05">AR05</option>
-            <option id="AR06" value="AR06">AR06</option>
-            <option id="AR07" value="AR07">AR07</option>
-            <option id="AR02_08C" value="AR02_08C">AR02、08合扇</option>
-            <option id="AR03_12C" value="AR03_12C">AR03、12合扇</option>
-            <option id="AR07_13C" value="AR07_13C">AR07、13合扇</option>
-            <option id="AR04_14C" value="AR04_14C">AR04、14合扇</option>
-        </select>
-        <p id="cap"></p>
-        <p id="text"></p>
-        <table class="table" id="table">
-            <tr>
-                <td class="firstC">
-                    时间<br/>
-                    <input type="radio" name="time" value="60" checked>60
-                    <input type="radio" name="time" value="30">30
-                    <input type="radio" name="time" value="15">15
-                </td>
-                <td class="thin">
-                    通行能力下降比(%)
-                    <br/>
-                    <select id="capDown">
-
+        <table class="mainDiv" id="mainDiv">
+            <td class="mainTd">
+                <div id="analys" class="analys">
+                    <p id="head" class="head">请选择要计算的扇区</p>
+                    <select name="sector" id="sector" onclick="selectSector('cap','head',this.value)">
+                        <option id="noselect" value="noselect">请选择扇区</option>
+                        <option id="AR01" value="AR01">AR01</option>
+                        <option id="AR02" value="AR02">AR02</option>
+                        <option id="AR03" value="AR03">AR03</option>
+                        <option id="AR04" value="AR04">AR04</option>
+                        <option id="AR05" value="AR05">AR05</option>
+                        <option id="AR06" value="AR06">AR06</option>
+                        <option id="AR07" value="AR07">AR07</option>
+                        <option id="AR02_08C" value="AR02_08C">AR02+08合扇</option>
+                        <option id="AR03_12C" value="AR03_12C">AR03+12合扇</option>
+                        <option id="AR07_13C" value="AR07_13C">AR07+13合扇</option>
+                        <option id="AR04_14C" value="AR04_14C">AR04+14合扇</option>
+                        <option id="AR02L08H" value="AR02L08H">AR08与02同时运行</option>
+                        <option id="AR03L12H" value="AR03L12H">AR12与03同时运行</option>
+                        <option id="AR07L13H" value="AR07L13H">AR13与07同时运行</option>
+                        <option id="AR04L14H" value="AR04L14H">AR14与04同时运行</option>
+                        <option id="AR08" value="AR08">AR08</option>
+                        <option id="AR12" value="AR12">AR12</option>
+                        <option id="AR13" value="AR13">AR13</option>
+                        <option id="AR14" value="AR14">AR14</option>
                     </select>
-                </td>
-                <td class="thin">
-                    动态容量
-                </td>
+                    <p id="cap"></p>
+                    <p id="text"></p>
+                    <table class="table" id="table">
+                        <tr>
+                            <td class="firstC">
+                                时间<br/>
+                                <input type="radio" name="time" value="60" checked>60
+                                <input type="radio" name="time" value="30">30
+                                <input type="radio" name="time" value="15">15
+                            </td>
+                            <td class="thin">
+                                通行能力下降比(%)
+                                <br/>
+                                <select id="capDown">
+            
+                                </select>
+                            </td>
+                            <td class="thin">
+                                动态容量
+                            </td>
+                            
+                            <td class="thin">
+                                预计扇区总进扇量
+                            </td>
+                            <td class="thin">
+                                <textarea type="text" placeholder="输入流控方向1" id="R0C4"></textarea>
+                            </td>
+                            <td class="thin">
+                                <textarea type="text" placeholder="输入流控方向2" id="R0C5"></textarea>
+                            </td>
+                            <td class="thin">
+                                <textarea type="text" placeholder="输入流控方向3" id="R0C6"></textarea>
+                            </td>
+            
+                            <td class="wide">
+                                <p id="R0C7">预计扇区小时架次（进扇量）</p>
+                            </td>
+                            <td class="wide">
+                                <p id="R0C8">（流量-通行能力）/流量</p>
+                            </td>
+                            <td class="wide">
+                                <p id="R0C9">应声明的动态容量与下降百分比</p>
+                            </td>
+                        </tr>
+                        
+                    </table>
+                    <button onclick="insertRow('table')">点击新增时间行</button>
+                    <button onclick="insertColumn('table')">点击新增流控方向</button>
+                    <button onclick="test()">时间</button>
+                    <button onclick="calculate()">点击计算流控策略</button>
+                    <button onclick="Button2()">点击获取不启动MDRS的策略</button>
+                    <button onclick="report(row,direction)">生成报表</button>
+                    <p id="explain">
+            
+                    </p>
+                </div>
                 
-                <td class="thin">
-                    预计扇区总进扇量
-                </td>
-                <td class="thin">
-                    <textarea type="text" placeholder="输入流控方向1" id="R0C4"></textarea>
-                </td>
-                <td class="thin">
-                    <textarea type="text" placeholder="输入流控方向2" id="R0C5"></textarea>
-                </td>
-                <td class="thin">
-                    <textarea type="text" placeholder="输入流控方向3" id="R0C6"></textarea>
-                </td>
+                <div id="a4-printArea" class="a4-endwise">
+                    <!--标题栏-->
+                    <p class="a4-head">
+                        沈阳区域管制中心预战术分析表
+                    </p>
+                    <button id="startPrint" onclick="startPrint()">打印</button>
+                    <button id="cancelPrint" onclick="cancelPrint()">取消</button>
+                    <table id="a4-table" class="a4-table">
+                        <tr>
+                            <td style="width: 20%;"><p>日期</p></td>
+                            <td id="time" style="width: 30%;" onclick="clickToChange(this.id)"></td>
+                            
+                            <td style="width: 20%;"><p>受影响扇区</p></td>
+                            <td id="a4-sector" style="width: 30%;" onclick="clickToChange(this.id)"></td>
+                        </tr>
+                        <tr>
+                            <td ><p>预计开始时间</p></td>
+                            <td id="starttime" onclick="clickToChange(this.id)"></td>
+                            <td ><p>预计结束时间</p></td>
+                            <td id="endtime" onclick="clickToChange(this.id)"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <p>运行情况简述:</p>
+                                <p id="describe" style="height: 40px;" onclick="clickToChange(this.id)">
+                                
+                                </p>
+                            </td>
+                        </tr>
+        
+                        <tr>
+                            <td >
+                                <p>预判动态通行能力值</p>
+                                
+                            </td>
+                            <td id="a4-cap" onclick="clickToChange(this.id)">
+        
+                            </td>
+                            <td >
+                                <p>会商结果</p>
+                                
+                            </td>
+                            <td id="coordinate" onclick="clickToChange(this.id)">
+        
+                            </td>
+                            
+                        </tr>
+        
+                        <tr>
+                            <td colspan="4">
+                                <p>制定措施内容:</p>
+                                <p id="content">
+                                    ""
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <p style="text-align: center;">容流平衡分析</p>
+                            </td>
+                        </tr>
+                        <!-- <tr>
+                            <td colspan="4">
+                                <div id="flowAndCap" class="inner" style="width: 100%;"></div>
+                                
+                            </td>
+                            
+                        </tr> -->
+                    </table>
+                    <div id="flowAndCap">
+        
+                    </div>
+                </div>
+                <div id="fillInfo" class="fillInfo">
+                    <input id="fill-textArea" class="fill-textArea"></input>
+                    <button id="fill-affirm" onclick="affirm_bt('fill-textArea',changeid,'fillInfo')">确定</button>
+                    <button id="fill-cancel" onclick="cancel_bt('fill-textArea','fillInfo')">取消</button>
+                </div>
 
-                <td class="wide">
-                    <p id="R0C7">预计扇区小时架次（进扇量）</p>
-                </td>
-                <td class="wide">
-                    <p id="R0C8">（流量-通行能力）/流量</p>
-                </td>
-                <td class="wide">
-                    <p id="R0C9">应声明的动态容量与下降百分比</p>
-                </td>
-            </tr>
+                <div id="deleteWindow" class="deleteWindow">
+                    <p>确定删除该行？</p>
+                    <button id="delete_affirm" onclick="delete_affirm()">确定</button>
+                    <button id="delete_cancel" onclick="delete_cancel()">取消</button>
+                </div>
+            </td>
             
         </table>
-        <button onclick="insertRow('table')">点击新增时间行</button>
-        <button onclick="insertColumn('table')">点击新增流控方向</button>
-        <button onclick="test()">时间</button>
-        <button onclick="calculate()">点击计算流控策略</button>
-        <button onclick="Button2()">点击获取不启动MDRS的策略</button>
-        <button onclick="report(row,direction)">生成报表</button>
-        <p id="explain">
-
-        </p>
+        
     </body>
 </html>

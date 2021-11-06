@@ -1,10 +1,22 @@
-td{
+/* .td{
     border: 1px solid black;
     padding: 3px;
+} */
+
+.a4-table p{
+    margin: 3px;
+    text-align: left;
 }
 
-p{
+.a4-table td{
     margin: 3px;
+    text-align: left;
+}
+
+
+.a4-endwise button{
+    align-self: center;
+    width: 40%;
 }
 
 table{
@@ -16,18 +28,17 @@ table{
     border-style: none;
 }
 
-.head{
+.a4-head{
     width: 756px;
     font-size: 30px;
     font-family:黑体;
     text-align: center;
-    padding: 10px;
 }
 
 .a4-endwise{
     width: 756px;
     /*height: 1086px;*/
-    
+    display: none;
     overflow: hidden;
     padding: 0;
     word-break:break-all;
@@ -37,8 +48,53 @@ table{
 .a4-broadwise{
     width: 1569px;
     height: 1073px;
-
+    display: none;
     overflow: hidden;
     padding: 0;
     word-break:break-all;
+}
+
+.deleteWindow{
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 40%;
+    top:40%;
+    border: red 3px solid;
+    background-color: white;
+    padding: 20px;
+}
+
+.deleteBt{
+    border: none;
+    background-image: url("../image/delete.png");
+    background-repeat: no-repeat;
+    height: 16px;
+    width: 16px;
+    display: inline;
+    max-width: 16px;
+}
+
+.fillInfo{
+    background-color: lightskyblue;
+    display: none;
+    position: fixed;
+    left: 30%;
+    top:20%;
+    z-index: 1;
+    width: 40%;
+    height: 40%;
+    text-align: left;
+}
+
+.fill-textArea{
+    margin: 20px;
+    width: 80%;
+    display: block;
+    font-family: "黑体";
+    
+}
+
+.fillInfo button{
+    align-self: center;
 }
